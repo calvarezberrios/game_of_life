@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import './App.css';
 import Grid from './components/Grid';
 
-
-
 function App() {
   const [grid, setGrid] = useState(new Array(25).fill(new Array(25).fill({isAlive: false})));
 
