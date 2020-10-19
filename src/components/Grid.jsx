@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import produce from "immer";
 import styled from "styled-components";
 import nextGen from '../utils/nextGen';
+import Cell from "./Cell";
 import lifeImg from "../assets/images/life.png";
 import alienImg from "../assets/images/alien.png";
 import pacmanImg from "../assets/images/pacman.png";
@@ -9,7 +10,10 @@ import skullImg from "../assets/images/skull.png";
 import { life, alien, skull, pacman } from '../presets';
 import findNeighbors from '../utils/findNeighbors';
 
-const Grid = ({grid, setGrid, setGridSize}) => {  
+const initialGrid = Array.from({ length: 25 }).map(() => Array.from({ length: 25 }).fill({ isAlive: false }));
+
+const Grid = () => { 
+    const [grid, setGrid] = useState(initialGrid); 
     const [gen, setGen] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [speed, setSpeed] = useState(10);
@@ -20,17 +24,6 @@ const Grid = ({grid, setGrid, setGridSize}) => {
     // Toggle isAlive on clicked cell
     function setIsAlive(col, row) {  
         if(!isPlaying) { 
-            /* setGrid(grid.map((cols, colIndex) => {
-                return cols.map((cell, rowIndex) => {
-                    if(colIndex === col && rowIndex === row) {
-                        return {
-                            ...cell,
-                            isAlive: !cell.isAlive
-                        }
-                    }
-                    return cell;
-                })
-            })) */
 
             setGrid(grid => produce(grid, copy => {copy[col][row].isAlive = !copy[col][row].isAlive}));
 
@@ -40,34 +33,23 @@ const Grid = ({grid, setGrid, setGridSize}) => {
 
     const moveToNextGen = useCallback(() => {
         
-        setGrid(grid => {
-            return produce(grid, copy => {
-                for (let c = 0; c < grid.length; c++) {
-                    for (let r = 0; r < grid[0].length; r++) {
-                        let rowLimit = grid.length-1;
-                        let colLimit = grid[0].length-1;
-                        let neighbors = 0;
-
-                        for(let x = Math.max(0, c - 1); x <= Math.min(c + 1, rowLimit); x++) {
-                            for(let y = Math.max(0, r - 1); y <= Math.min(r + 1, colLimit); y++) {
-                                if((x !== c || y !== r) && grid[x][y].isAlive) {
-                                    neighbors += 1
-                                }
-                            }
-                        }
-
-                        if(neighbors <= 1 || neighbors >= 4) {
-                            copy[c][r].isAlive = false
-                        } else if (neighbors === 3) {
-                            copy[c][r].isAlive = true;
-                        }
+        setGrid(grid => produce(grid, copy => {
+            for(let c = 0; c < 25; c++){
+                for(let r = 0; r < 25; r++) {
+                    const neighbors = findNeighbors(grid, c, r);
+        
+                    if(neighbors < 2 || neighbors > 3) {
+                        copy[c][r].isAlive = false;
+                    } else if (!grid[c][r].isAlive && neighbors === 3) {
+                        copy[c][r].isAlive = true;
                     }
                 }
-            })
-        });
+            }
+        }));
+
         setGen(gen => gen + 1)
 
-    }, [gen, grid, setGrid]);
+    }, []);
 
     const runSimulation = useCallback(() => {
         if(!isPlayingRef.current) {
@@ -76,7 +58,7 @@ const Grid = ({grid, setGrid, setGridSize}) => {
 
         moveToNextGen()
 
-        setTimeout(runSimulation, 25);
+        setTimeout(runSimulation, 100);
     }, []);
 
     function clearGrid() {
@@ -86,14 +68,7 @@ const Grid = ({grid, setGrid, setGridSize}) => {
         setSpeed(10);
     }
 
-    /* useEffect(() => {
-        if(isPlaying) {
-            setTimeout(() => {
-                moveToNextGen();
-            }, speed);
-        }
-        
-    }, [isPlaying, gen, speed]); // eslint-disable-line react-hooks/exhaustive-deps */
+
 
     return (
         <div>
@@ -112,7 +87,7 @@ const Grid = ({grid, setGrid, setGridSize}) => {
                 <button onClick = {() => setSpeed(10)}>fast</button>
                 <br />
                 <label htmlFor = "gridSize">Grid Size: </label>
-                <select id = "gridSize" onChange = {(e) => setGridSize(parseInt(e.target.value))}>
+                <select id = "gridSize" >
                     <option value = {25}>25x25</option>
                     <option value = {50}>50x50</option>
                     <option value = {100}>100x100</option>
@@ -120,16 +95,14 @@ const Grid = ({grid, setGrid, setGridSize}) => {
 
             </div>           
             {/* Map out the grid and display on screen */}
-            {grid.map((col, colIndex) => {
-                return (
-                    <React.Fragment key = {colIndex}>
-                        <br />
-                        {col.map((cell, rowIndex) => {
-                            return <Cell key = {rowIndex} isAlive = {cell.isAlive} onClick = {() => setIsAlive(colIndex, rowIndex)}/>
-                        })}
-                    </React.Fragment>
-                )
-            })}
+            <GridContainer>          
+                {/* Map out the grid and display on screen */}
+                {grid.map((cols, col) => {
+                    return cols.map((cell, row) => {
+                        return <Cell key = {`${col}-${row}`} isPlaying = {isPlaying} grid = {grid} setGrid = {setGrid} col = {col} row = {row} isAlive = {cell.isAlive} />
+                    })
+                })}
+            </GridContainer>
             
 
             <br />
@@ -144,14 +117,12 @@ const Grid = ({grid, setGrid, setGridSize}) => {
 
 export default Grid;
 
-const Cell = styled.div`
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 1px solid black;
-    margin-top: -10px;
-    margin-left: -1px;
-    background: ${props => props.isAlive ? "#ffff00" : "#000080"};
+const GridContainer = styled.div`
+    box-shadow: 12px 12px 14px #f8f5c2;
+    display: grid;
+    grid-template-columns: repeat(25, 20px);
+    width: ${25 * 20}px;
+    margin: 0 auto;
 `;
     
 
