@@ -12,6 +12,17 @@ import findNeighbors from '../utils/findNeighbors';
 
 const initialGrid = Array.from({ length: 50 }).map(() => Array.from({ length: 50 }).fill({ isAlive: false }));
 
+const operations = [
+    [0, 1],
+    [1, 1],
+    [0, -1],
+    [1, -1],
+    [-1, 1],
+    [-1, -1],
+    [1, 0],
+    [-1, 0],
+]
+
 const Grid = () => { 
     const [grid, setGrid] = useState(initialGrid); 
     const [gen, setGen] = useState(0);
@@ -36,7 +47,15 @@ const Grid = () => {
         setGrid(grid => produce(grid, copy => {
             for(let c = 0; c < 50; c++){
                 for(let r = 0; r < 50; r++) {
-                    const neighbors = findNeighbors(grid, c, r);
+                    let neighbors = 0;
+
+                    operations.forEach(([x, y]) => {
+                        const newI = c + x;
+                        const newJ = r + y;
+                        if((newI >= 0 && newI < grid.length) && (newJ >= 0 && newJ < grid[0].length) && grid[newI][newJ].isAlive) {
+                            neighbors += 1;
+                        }
+                    })
         
                     if(neighbors < 2 || neighbors > 3) {
                         copy[c][r].isAlive = false;
