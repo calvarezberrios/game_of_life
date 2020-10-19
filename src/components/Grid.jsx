@@ -10,7 +10,9 @@ import skullImg from "../assets/images/skull.png";
 import { life, alien, skull, pacman } from '../presets';
 import findNeighbors from '../utils/findNeighbors';
 
-const initialGrid = Array.from({ length: 50 }).map(() => Array.from({ length: 50 }).fill({ isAlive: false }));
+const size = 25;
+
+const initialGrid = Array.from({ length: size }).map(() => Array.from({ length: size }).fill({ isAlive: false }));
 
 const operations = [
     [0, 1],
@@ -21,7 +23,9 @@ const operations = [
     [-1, -1],
     [1, 0],
     [-1, 0],
-]
+];
+
+
 
 const Grid = () => { 
     const [grid, setGrid] = useState(initialGrid); 
@@ -45,8 +49,8 @@ const Grid = () => {
     const moveToNextGen = useCallback(() => {
         
         setGrid(grid => produce(grid, copy => {
-            for(let c = 0; c < 50; c++){
-                for(let r = 0; r < 50; r++) {
+            for(let c = 0; c < size; c++){
+                for(let r = 0; r < size; r++) {
                     let neighbors = 0;
 
                     operations.forEach(([x, y]) => {
@@ -139,8 +143,8 @@ export default Grid;
 const GridContainer = styled.div`
     box-shadow: 12px 12px 14px #f8f5c2;
     display: grid;
-    grid-template-columns: repeat(50, 20px);
-    width: ${50 * 20}px;
+    grid-template-columns: repeat(${size}, 20px);
+    width: ${size * 20}px;
     margin: 0 auto;
 `;
     
