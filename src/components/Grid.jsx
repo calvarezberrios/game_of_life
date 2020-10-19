@@ -10,7 +10,7 @@ import skullImg from "../assets/images/skull.png";
 import { life, alien, skull, pacman } from '../presets';
 import findNeighbors from '../utils/findNeighbors';
 
-const initialGrid = Array.from({ length: 25 }).map(() => Array.from({ length: 25 }).fill({ isAlive: false }));
+const initialGrid = Array.from({ length: 50 }).map(() => Array.from({ length: 50 }).fill({ isAlive: false }));
 
 const Grid = () => { 
     const [grid, setGrid] = useState(initialGrid); 
@@ -34,8 +34,8 @@ const Grid = () => {
     const moveToNextGen = useCallback(() => {
         
         setGrid(grid => produce(grid, copy => {
-            for(let c = 0; c < 25; c++){
-                for(let r = 0; r < 25; r++) {
+            for(let c = 0; c < 50; c++){
+                for(let r = 0; r < 50; r++) {
                     const neighbors = findNeighbors(grid, c, r);
         
                     if(neighbors < 2 || neighbors > 3) {
@@ -63,9 +63,9 @@ const Grid = () => {
 
     function clearGrid() {
         setIsPlaying(false);
-        setGrid(new Array(25).fill(new Array(25).fill({isAlive: false})));
+        setGrid(initialGrid);
         setGen(0);
-        setSpeed(10);
+        setSpeed(100);
     }
 
 
@@ -120,8 +120,8 @@ export default Grid;
 const GridContainer = styled.div`
     box-shadow: 12px 12px 14px #f8f5c2;
     display: grid;
-    grid-template-columns: repeat(25, 20px);
-    width: ${25 * 20}px;
+    grid-template-columns: repeat(50, 20px);
+    width: ${50 * 20}px;
     margin: 0 auto;
 `;
     
