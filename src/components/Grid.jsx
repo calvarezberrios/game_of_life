@@ -10,9 +10,7 @@ import skullImg from "../assets/images/skull.png";
 import { life, alien, skull, pacman } from '../presets';
 import findNeighbors from '../utils/findNeighbors';
 
-const size = 25;
 
-const initialGrid = Array.from({ length: size }).map(() => Array.from({ length: size }).fill({ isAlive: false }));
 
 const operations = [
     [0, 1],
@@ -28,10 +26,11 @@ const operations = [
 
 
 const Grid = () => { 
-    const [grid, setGrid] = useState(initialGrid); 
+    const [size, setSize] = useState(25);
+    const [grid, setGrid] = useState(life); 
     const [gen, setGen] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [speed, setSpeed] = useState(10);
+    const [speed, setSpeed] = useState(100);
 
     const isPlayingRef = useRef(isPlaying);
     isPlayingRef.current = isPlaying;
@@ -81,12 +80,12 @@ const Grid = () => {
 
         moveToNextGen()
 
-        setTimeout(runSimulation, 100);
+        setTimeout(runSimulation, speed);
     }, []);
 
     function clearGrid() {
         setIsPlaying(false);
-        setGrid(initialGrid);
+        setGrid(Array.from({ length: size }).map(() => Array.from({ length: size }).fill({ isAlive: false })));
         setGen(0);
         setSpeed(100);
     }
@@ -106,19 +105,21 @@ const Grid = () => {
                 }}>{isPlaying ? "Stop" : "Play"}</button>
                 <button disabled = {isPlaying} onClick = {moveToNextGen}>Next</button>
                 <button disabled = {isPlaying} onClick = {clearGrid}>clear</button>
-                <button onClick = {() => setSpeed(500)}>slow</button>
-                <button onClick = {() => setSpeed(10)}>fast</button>
+                <button onClick = {() => {setSpeed(1000);}}>slow</button>
+                <button onClick = {() => {setSpeed(25);}}>fast</button>
                 <br />
                 <label htmlFor = "gridSize">Grid Size: </label>
-                <select id = "gridSize" >
+                <select id = "gridSize" onChange = {(e) => {
+                        setSize(e.target.value)
+                        setGrid(Array.from({ length: parseInt(e.target.value) }).map(() => Array.from({ length: parseInt(e.target.value) }).fill({ isAlive: false })));
+                    }}>
                     <option value = {25}>25x25</option>
-                    <option value = {50}>50x50</option>
-                    <option value = {100}>100x100</option>
+                    <option value = {50} >50x50</option>
                 </select>
 
             </div>           
             {/* Map out the grid and display on screen */}
-            <GridContainer>          
+            <GridContainer size = {size}>          
                 {/* Map out the grid and display on screen */}
                 {grid.map((cols, col) => {
                     return cols.map((cell, row) => {
@@ -131,9 +132,9 @@ const Grid = () => {
             <br />
 
             <button onClick = {() => {setGrid(life); setGen(0);}}><img src = {lifeImg} width = "75" height = "75" alt = ""/></button>
-            <button onClick = {() => {setGrid(alien); setGen(0);}}><img src = {alienImg} width = "75" height = "75" alt = "" /></button>
-            <button onClick = {() => {setGrid(pacman); setGen(0);}}><img src = {pacmanImg} width = "75" height = "75" alt = "" /></button>
-            <button onClick = {() => {setGrid(skull); setGen(0);}}><img src = {skullImg} width = "75" height = "75" alt = "" /></button>
+            <button onClick = {() => {setSize(25); setGrid(alien); setGen(0);}}><img src = {alienImg} width = "75" height = "75" alt = "" /></button>
+            <button onClick = {() => {setSize(25); setGrid(pacman); setGen(0);}}><img src = {pacmanImg} width = "75" height = "75" alt = "" /></button>
+            <button onClick = {() => {setSize(25); setGrid(skull); setGen(0);}}><img src = {skullImg} width = "75" height = "75" alt = "" /></button>
         </div>
     );
 };
@@ -143,8 +144,8 @@ export default Grid;
 const GridContainer = styled.div`
     box-shadow: 12px 12px 14px #f8f5c2;
     display: grid;
-    grid-template-columns: repeat(${size}, 20px);
-    width: ${size * 20}px;
+    grid-template-columns: repeat(${props => props.size}, 20px);
+    width: ${props => props.size * 20}px;
     margin: 0 auto;
 `;
     
