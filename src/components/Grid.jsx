@@ -23,14 +23,13 @@ const operations = [
     [-1, 0],
 ];
 
-
+let speed = 100
 
 const Grid = () => { 
     const [size, setSize] = useState(25);
     const [grid, setGrid] = useState(life); 
     const [gen, setGen] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [speed, setSpeed] = useState(100);
 
     const isPlayingRef = useRef(isPlaying);
     isPlayingRef.current = isPlaying;
@@ -87,7 +86,7 @@ const Grid = () => {
         setIsPlaying(false);
         setGrid(Array.from({ length: size }).map(() => Array.from({ length: size }).fill({ isAlive: false })));
         setGen(0);
-        setSpeed(100);
+        speed = 100;
     }
 
 
@@ -97,16 +96,16 @@ const Grid = () => {
             <div>
                 <h4>Generation: {gen}</h4>
                 <button onClick ={() => {
-                    setIsPlaying(!isPlaying)
-                    if(!isPlaying) {
-                        isPlayingRef.current = true;
-                        runSimulation();
+                        setIsPlaying(!isPlaying);
+                        if(!isPlaying) {
+                            isPlayingRef.current = true;
+                            runSimulation();
                     }
                 }}>{isPlaying ? "Stop" : "Play"}</button>
                 <button disabled = {isPlaying} onClick = {moveToNextGen}>Next</button>
                 <button disabled = {isPlaying} onClick = {clearGrid}>clear</button>
-                <button onClick = {() => {setSpeed(1000);}}>slow</button>
-                <button onClick = {() => {setSpeed(25);}}>fast</button>
+                <button onClick = {() => {speed = 1000; }}>slow</button>
+                <button onClick = {() => {speed = 25; }}>fast</button>
                 <br />
                 <label htmlFor = "gridSize">Grid Size: </label>
                 <select id = "gridSize" onChange = {(e) => {
