@@ -112,7 +112,9 @@ const Grid = () => {
                 <select id = "gridSize" onChange = {(e) => {
                         setSize(e.target.value)
                         setGrid(Array.from({ length: parseInt(e.target.value) }).map(() => Array.from({ length: parseInt(e.target.value) }).fill({ isAlive: false })));
+                        e.target.value = "";
                     }}>
+                    <option value = "">Change Grid Size</option>
                     <option value = {25}>25x25</option>
                     <option value = {50} >50x50</option>
                 </select>
