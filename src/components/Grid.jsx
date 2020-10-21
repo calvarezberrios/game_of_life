@@ -131,7 +131,7 @@ const Grid = () => {
 
             <br />
 
-            <button onClick = {() => {setGrid(life); setGen(0);}}><img src = {lifeImg} width = "75" height = "75" alt = ""/></button>
+            <button onClick = {() => {setSize(25); setGrid(life); setGen(0);}}><img src = {lifeImg} width = "75" height = "75" alt = ""/></button>
             <button onClick = {() => {setSize(25); setGrid(alien); setGen(0);}}><img src = {alienImg} width = "75" height = "75" alt = "" /></button>
             <button onClick = {() => {setSize(25); setGrid(pacman); setGen(0);}}><img src = {pacmanImg} width = "75" height = "75" alt = "" /></button>
             <button onClick = {() => {setSize(25); setGrid(skull); setGen(0);}}><img src = {skullImg} width = "75" height = "75" alt = "" /></button>
