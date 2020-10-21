@@ -48,8 +48,8 @@ const Grid = () => {
     const moveToNextGen = useCallback(() => {
         
         setGrid(grid => produce(grid, copy => {
-            for(let c = 0; c < size; c++){
-                for(let r = 0; r < size; r++) {
+            for(let c = 0; c < grid.length; c++){
+                for(let r = 0; r < grid[0].length; r++) {
                     let neighbors = 0;
 
                     operations.forEach(([x, y]) => {
