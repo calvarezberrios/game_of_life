@@ -94,8 +94,7 @@ const Grid = () => {
 
     function clearGrid() {
         setIsPlaying(false);
-        const rows = size !== 25 ? size - 3 : size;
-        setGrid(Array.from({ length: size }).map(() => Array.from({ length: rows }).fill({ isAlive: false })));
+        setGrid(Array.from({ length: size }).map(() => Array.from({ length: size }).fill({ isAlive: false })));
         setGen(0);
         speed = 100;
     }
@@ -130,15 +129,14 @@ const Grid = () => {
                             id="gridSize"
                             value = {size}
                             onChange={(e) => {
-                                setSize(e.target.value)
-                                const rows = parseInt(e.target.value) !== 25 ? parseInt(e.target.value) - 3 : parseInt(e.target.value);
-                                setGrid(Array.from({ length: parseInt(e.target.value) }).map(() => Array.from({ length: rows }).fill({ isAlive: false })));
+                                setSize(e.target.value);
+                                setGrid(Array.from({ length: parseInt(e.target.value) }).map(() => Array.from({ length: parseInt(e.target.value) }).fill({ isAlive: false })));
                                 e.target.value = "";
                             }}
                             label="Grid Size"
                         >
                             <MenuItem value={25}>25 x 25</MenuItem>
-                            <MenuItem value={50}>50 x 50</MenuItem>
+                            <MenuItem value={40}>40 x 40</MenuItem>
                         </Select>
                     </FormControl>
                 </Controls>
