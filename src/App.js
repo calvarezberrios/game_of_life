@@ -1,19 +1,33 @@
   
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import './App.css';
+import AppBar from './components/AppBar';
+import FooterBar from "./components/Footer";
 import Grid from './components/Grid';
+import Info from './components/Info';
 
 function App() {
   
 
   return (
     <div className="App">
-      <h1>Conway's Game Of Life</h1>
-      <h3>By: Carlos "Mannie" Alvarez-Berrios</h3>
+      <AppBar />
+      <MainContent>
+        <Grid />
+        <Info />
+      </MainContent>
       
-      <Grid />
+      <FooterBar />
     </div>
   );
 }
 
 export default App;
+
+const MainContent = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items; center;
+  padding: 30px 0;
+`;
