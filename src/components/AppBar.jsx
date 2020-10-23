@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
+    title: {
+        margin: "0 auto",
+    }
 }));
 
 export default function AppBar() {
@@ -19,7 +22,7 @@ export default function AppBar() {
         <div className={classes.root}>
             <AppBarContainer position="static">
                 <Toolbar variant="dense">
-                    <Typography variant="h4" color="inherit">
+                    <Typography variant="h4" color="inherit" className = {classes.title}>
                         Conway's Game Of Life
                     </Typography>
                 </Toolbar>
